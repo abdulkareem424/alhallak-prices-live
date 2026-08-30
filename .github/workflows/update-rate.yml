@@ -30,7 +30,7 @@ jobs:
                   for pos in hits[:2]:
                       snippet=re.sub(r"\\s+"," ",html[max(0,pos-250):pos+500])
                       output.append(snippet)
-              api_urls=sorted(set(re.findall(r'https?[^"\\' <>]{10,200}',html)))
+              api_urls=sorted(set(re.findall(r"https?[^\\\"' <>]{10,200}",html)))
               output.append("CANDIDATE_URLS")
               output.extend([u for u in api_urls if any(k in u.lower() for k in ["api","currency","rate"])][:50])
           open("rate-debug.txt","w",encoding="utf-8").write("\n".join(output)[:50000])
