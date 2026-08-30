@@ -1,4 +1,55 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>أسعار محل الحلاق</title><style>*{box-sizing:border-box}body{margin:0;background:#f6f2e8;color:#201a12;font-family:Tahoma,Arial,sans-serif}.head{background:#173f2b;color:white;padding:20px}.wrap{max-width:1100px;margin:auto;padding:0 16px}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:16px;background:#f2c14e;color:#173f2b;font-size:25px}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;margin:4px 0 0;color:#dbe8df}.hero{background:#efe3c8;border-radius:28px;padding:24px;margin:28px 0 14px}.hero h2{font-size:30px;margin:3px 0 8px}.hero p{margin:0;color:#6a6257}.rate,.search{background:white;border:1px solid #d7c9ad;border-radius:18px;padding:14px;margin-bottom:14px}.rate{display:flex;justify-content:space-between;gap:10px;font-size:14px}.rate small{color:#496454}.search{position:sticky;top:10px;z-index:2;padding:8px}.search input{width:100%;border:0;outline:0;font:inherit;font-size:16px;padding:10px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-bottom:40px}.card{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #ddd1b9;border-radius:18px;padding:15px}.card h3{font-size:16px;margin:0}.card p{font-size:12px;color:#857a68;margin:6px 0 0}.price{min-width:130px;text-align:left;background:#f5eddb;border-radius:15px;padding:9px 12px}.syp{font-weight:900;color:#173f2b}.usd{font-size:13px;font-weight:bold;color:#806b3f;border-top:1px solid #dacdaa;margin-top:4px;padding-top:4px}.none{text-align:center;padding:70px}.foot{text-align:center;font-size:12px;color:#756b5d;padding:15px}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero h2{font-size:25px}.rate{align-items:flex-start;flex-direction:column}.card{padding:13px}}</style></head><body><header class="head"><div class="wrap brand"><div class="logo">🌾</div><div><h1>أسعار محل الحلاق</h1><p>حبوب، بقوليات ومواد غذائية</p></div><a href="admin.html" style="margin-right:auto;color:white;text-decoration:none;border:1px solid #ffffff44;padding:9px 12px;border-radius:12px;font-size:12px">الإدارة</a></div></header><main class="wrap"><section class="hero"><b>قائمة اليوم</b><h2>السعر بالدولار والليرة</h2><p>الأسعار قابلة للتغيير، تأكد من المحل عند تثبيت الطلب.</p></section><div class="rate"><span><b>سعر التحويل الأعلى في دمشق:</b> 1$ = <span id="rate">13,220</span> ل.س</span><small>تحديث تلقائي كل 30 دقيقة • <span id="lastUpdate">جاري التحقق…</span></small></div><div class="search"><input id="q" placeholder="ابحث عن برغل، رز، طحين..."></div><section id="grid" class="grid"></section></main><footer class="foot">أسعار محل الحلاق</footer><script>
-let products=[["برغل أحمر",15,"USD","شوال"],["برغل خليل",15,"USD","شوال"],["برغل أشقر",14.5,"USD","شوال"],["برغل وسط",6,"USD","10 كيلو"],["بريق",19,"USD","عبوة"],["خلطة",40,"USD","عبوة"],["بوشار",17,"USD","شوال"],["ترمس حلو فحل",500000,"SYP","عبوة"],["ترمس حلو وسط",340000,"SYP","عبوة"],["ترمس مر",28,"USD","شوال"],["حمص 12",35,"USD","عبوة"],["حمص 9",30,"USD","25 كيلو"],["حمص 8",25,"USD","25 كيلو"],["حمص فلافل",38,"USD","عبوة"],["حمض",29.5,"USD","عبوة"],["دخن",15,"USD","شوال"],["رز كبسة ذهبي أول",30,"USD","عبوة"],["رز كبسة كريمي",21,"USD","16 كيلو"],["رز كريمي سيلا الفاخر",17,"USD","عبوة"],["رز مصري",19,"USD","عبوة"],["سكر",35,"USD","شوال"],["سميد",12.5,"USD","عبوة"],["شعيرية",2.9,"USD","5 كيلو"],["شعيرية",14.5,"USD","25 كيلو"],["شوفان",28,"USD","25 كيلو"],["طحين حبة كاملة",200000,"SYP","عبوة"],["طحين دندل",22,"USD","شوال"],["طحين شعير",9,"USD","عبوة"],["طحين عبر الشرق",21,"USD","شوال"],["طحين عبر الشرق إكسترا",22,"USD","شوال"],["طحين عبر الشرق غولد",27,"USD","شوال"],["طحين الشام",20,"USD","شوال"],["طحين نخالة",18,"USD","شوال"],["طحين وسيم أصفر",20,"USD","شوال"],["عدس أبيض",10,"USD","10 كيلو"],["عدس أسود",17,"USD","عبوة"],["مجروش",8,"USD","10 كيلو"],["مجروش خليل",22,"USD","عبوة"],["فاصولياء بيض الحمام",40,"USD","عبوة"],["فاصولياء قديمة بيضاء",20,"USD","عبوة"],["فاصولياء مصرية جديدة",30.5,"USD","عبوة"],["فاصولياء عريضة",46,"USD","عبوة"],["فريكة",50,"USD","عبوة"],["فول",49,"USD","45 كيلو"],["فول جديد",29,"USD","عبوة"],["فول حسام",33,"USD","عبوة"],["فول مصري",23,"USD","عبوة"],["قمح مقشور",15,"USD","عبوة"],["كشكة",30,"USD","عبوة"],["خميرة قطعة",1.2,"USD","قطعة"],["خميرة كرتونة",23.5,"USD","كرتونة"],["زيت نخيل",41.5,"USD","عبوة"],["نشاء قمح تللو ناعم",30,"USD","عبوة"],["نشاء قمح تللو خشن",6,"USD","ربطة"],["نشاء ذرة سعودي",19,"USD","عبوة"],["نشاء ذرة مصري",14,"USD","عبوة"]];let rate=13220;const nf=new Intl.NumberFormat("ar-SY",{maximumFractionDigits:0});function render(){const q=document.querySelector('#q').value.trim(),rows=products.filter(p=>p[0].includes(q)),grid=document.querySelector('#grid');grid.innerHTML=rows.length?rows.map(p=>{const usd=p[2]==='USD'?p[1]:p[1]/rate,syp=p[2]==='SYP'?p[1]:p[1]*rate;return `<article class="card"><div><h3>${p[0]}</h3><p>${p[3]}</p></div><div class="price"><div class="syp">${nf.format(Math.round(syp))} <small>ل.س</small></div><div class="usd">$${usd.toLocaleString('en-US',{maximumFractionDigits:2,minimumFractionDigits:usd<10?2:0})}</div></div></article>`}).join(''):'<p class="none">ما لقينا هالصنف</p>'}Promise.all([fetch('rate.json?'+Date.now()).then(r=>r.json()),fetch('products.json?'+Date.now()).then(r=>r.json())]).then(([d,p])=>{if(d.rate){rate=d.rate;document.querySelector('#rate').textContent=nf.format(rate)}const stamp=d.updated_at||d.checked_at;if(stamp){const formatted=new Intl.DateTimeFormat('ar-SY',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Damascus'}).format(new Date(stamp));document.querySelector('#lastUpdate').textContent='آخر تحديث: '+formatted}else{document.querySelector('#lastUpdate').textContent='وقت التحديث غير متوفر'}if(Array.isArray(p))products=p;render()}).catch(render);document.querySelector('#q').addEventListener('input',render);render();
+let products=[["برغل أحمر",16,"USD","شوال"],["برغل خليل",16,"USD","شوال"],["برغل أشقر",14.5,"USD","شوال"],["برغل وسط",6,"USD","10 كيلو"],["بريق",19,"USD","عبوة"],["خلطة",40,"USD","عبوة"],["بوشار",17,"USD","شوال"],["ترمس حلو فحل",500000,"SYP","عبوة"],["ترمس حلو وسط",340000,"SYP","عبوة"],["ترمس مر",28,"USD","شوال"],["حمص 12",35,"USD","عبوة"],["حمص 9",30,"USD","25 كيلو"],["حمص 8",25,"USD","25 كيلو"],["حمص فلافل",38,"USD","عبوة"],["حمض",30.5,"USD","عبوة"],["دخن",15,"USD","شوال"],["رز كبسة ذهبي أول",30,"USD","عبوة"],["رز كبسة كريمي",21,"USD","16 كيلو"],["رز كريمي سيلا الفاخر",17,"USD","عبوة"],["رز مصري",19,"USD","عبوة"],["سكر",35,"USD","شوال"],["سميد",12.5,"USD","عبوة"],["شعيرية",2.9,"USD","5 كيلو"],["شعيرية",14.5,"USD","25 كيلو"],["شوفان",28,"USD","25 كيلو"],["طحين حبة كاملة",200000,"SYP","عبوة"],["طحين دندل",22,"USD","شوال"],["طحين شعير",9,"USD","عبوة"],["طحين عبر الشرق",21,"USD","شوال"],["طحين عبر الشرق إكسترا",22,"USD","شوال"],["طحين عبر الشرق غولد",27,"USD","شوال"],["طحين الشام",20,"USD","شوال"],["طحين نخالة",18,"USD","شوال"],["طحين وسيم أصفر",20,"USD","شوال"],["عدس أبيض",10,"USD","10 كيلو"],["عدس أسود",17,"USD","عبوة"],["مجروش",8,"USD","10 كيلو"],["مجروش خليل",22,"USD","عبوة"],["فاصولياء بيض الحمام",41,"USD","عبوة"],["فاصولياء قديمة بيضاء",20,"USD","عبوة"],["فاصولياء مصرية جديدة",30.5,"USD","عبوة"],["فاصولياء عريضة",46,"USD","عبوة"],["فريكة",50,"USD","عبوة"],["فول",49,"USD","45 كيلو"],["فول جديد",29,"USD","عبوة"],["فول حسام",33,"USD","عبوة"],["فول مصري",23,"USD","عبوة"],["قمح مقشور",15,"USD","عبوة"],["كشكة",23,"USD","عبوة"],["خميرة قطعة",1.2,"USD","قطعة"],["خميرة كرتونة",23.5,"USD","كرتونة"],["زيت نخيل",41.5,"USD","عبوة"],["نشاء قمح تللو ناعم",30,"USD","عبوة"],["نشاء قمح تللو خشن",6,"USD","ربطة"],["نشاء ذرة سعودي",19,"USD","عبوة"],["نشاء ذرة مصري",14,"USD","عبوة"]];
+let rate=13220;
+const nf=new Intl.NumberFormat("ar-SY",{maximumFractionDigits:0});
+const dtf=new Intl.DateTimeFormat("ar-SY",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Damascus"});
+
+function render(){
+  const q=document.querySelector("#q").value.trim();
+  const rows=products.filter(p=>p[0].includes(q));
+  const grid=document.querySelector("#grid");
+  grid.innerHTML=rows.length?rows.map(p=>{
+    const usd=p[2]==="USD"?p[1]:p[1]/rate;
+    const syp=p[2]==="SYP"?p[1]:p[1]*rate;
+    return `<article class="card"><div><h3>${p[0]}</h3><p>${p[3]}</p></div><div class="price"><div class="syp">${nf.format(Math.round(syp))} <small>ل.س</small></div><div class="usd">$${usd.toLocaleString("en-US",{maximumFractionDigits:2,minimumFractionDigits:usd<10?2:0})}</div></div></article>`;
+  }).join(""):'<p class="none">ما لقينا هالصنف</p>';
+}
+
+function applyRate(data){
+  if(data.rate){
+    rate=Number(data.rate);
+    document.querySelector("#rate").textContent=nf.format(rate);
+  }
+  const stamp=data.updated_at||data.checked_at;
+  document.querySelector("#lastUpdate").textContent=stamp?"آخر تحديث: "+dtf.format(new Date(stamp)):"وقت التحديث غير متوفر";
+  render();
+}
+
+async function refreshRate(){
+  try{
+    const response=await fetch("rate.json?t="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("rate request failed");
+    applyRate(await response.json());
+  }catch(error){
+    document.querySelector("#lastUpdate").textContent="تعذر التحقق الآن • آخر سعر محفوظ";
+  }
+}
+
+async function refreshProducts(){
+  try{
+    const response=await fetch("products.json?t="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("products request failed");
+    const data=await response.json();
+    if(Array.isArray(data)){products=data;render();}
+  }catch(error){}
+}
+
+document.querySelector("#q").addEventListener("input",render);
+render();
+refreshRate();
+refreshProducts();
+setInterval(refreshRate,30*60*1000);
+setInterval(refreshProducts,5*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){refreshRate();refreshProducts();}});
 </script></body></html>
 
