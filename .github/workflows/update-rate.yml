@@ -1,44 +1,74 @@
 name: Update exchange rate
-
 on:
   schedule:
     - cron: "1,31 * * * *"
   workflow_dispatch:
-
 permissions:
   contents: write
-
+concurrency:
+  group: exchange-rate-update
+  cancel-in-progress: true
 jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Diagnose SP Today payload
+      - name: Fetch Damascus sell rate
         run: |
           python - <<'PY'
-          import re, urllib.request
-          urls = ["https://sp-today.com/currency/us-dollar", "https://sp-today.com/"]
-          output = []
-          for url in urls:
-              req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
-              html = urllib.request.urlopen(req, timeout=20).read().decode("utf-8","ignore")
-              output += [f"URL={url}", f"LENGTH={len(html)}"]
-              for token in ["دمشق","قديمة","للبيع","مبيع","sell","buy","USD","currency"]:
-                  hits=[m.start() for m in re.finditer(token,html,re.I)][:5]
-                  output.append(f"TOKEN {token}: {hits}")
-                  for pos in hits[:2]:
-                      snippet=re.sub(r"\\s+"," ",html[max(0,pos-250):pos+500])
-                      output.append(snippet)
-              api_urls=sorted(set(re.findall(r"https?[^\\\"' <>]{10,200}",html)))
-              output.append("CANDIDATE_URLS")
-              output.extend([u for u in api_urls if any(k in u.lower() for k in ["api","currency","rate"])][:50])
-          open("rate-debug.txt","w",encoding="utf-8").write("\n".join(output)[:50000])
+          import datetime, html as html_lib, json, re, urllib.parse, urllib.request
+          now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          headers={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36","Accept-Language":"ar,en;q=0.8"}
+          def get(url):
+              return urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=25).read().decode("utf-8","ignore")
+          def number(raw):
+              n=float(raw.replace(",","").replace("٬",""))
+              return int(round(n*100 if n<1000 else n))
+          def valid(n): return 5000<=n<=50000
+          def sp_today():
+              page=get("https://sp-today.com/currency/us-dollar")
+              for p in [r"([0-9]{1,3}(?:[,.٬][0-9]{2,3})+)\s*قديمة[^\n]{0,80}للبيع",r"مبيع[\s\S]{0,250}?([0-9]{1,3}(?:[,.٬][0-9]{2,3})+)"]:
+                  m=re.search(p,page,re.I)
+                  if m and valid(number(m.group(1))): return number(m.group(1))
+              raise ValueError("rate not found")
+          def syria_tv():
+              slug=urllib.parse.quote("أسعار-صرف-العملات-مقابل-الليرة-تحديث-مباشر")
+              page=get("https://www.syria.tv/"+slug)
+              text=re.sub(r"\s+"," ",html_lib.unescape(re.sub(r"<[^>]+>"," ",page)))
+              sections=[]
+              for anchor in ["سعر الليرة في دمشق","دمشق","دولار أمريكي"]:
+                  pos=text.find(anchor)
+                  if pos>=0: sections.append(text[pos:pos+5000])
+              for section in sections:
+                  for p in [r"دولار\s*أمريكي\s+([0-9]{4,5})\s+([0-9]{4,5})",r"دولار[\s\S]{0,250}?([0-9]{4,5})\s+([0-9]{4,5})"]:
+                      m=re.search(p,section)
+                      if m:
+                          vals=[int(m.group(1)),int(m.group(2))]
+                          vals=[v for v in vals if valid(v)]
+                          if vals:return max(vals)
+              raise ValueError("rate not found")
+          rate=source=None
+          errors=[]
+          for name,fetch in [("sp-today Damascus highest sell",sp_today),("syria.tv Damascus sell fallback",syria_tv)]:
+              try:
+                  value=fetch()
+                  if valid(value): rate,source=value,name;break
+              except Exception as e: errors.append(f"{name}: {e}")
+          if rate is None:
+              data=json.load(open("rate.json",encoding="utf-8"))
+              data.update({"checked_at":now,"status":"manual fallback","last_error":" | ".join(errors)[:500]})
+              print("Keeping manual rate",data["rate"])
+          else:
+              data={"rate":rate,"source":source,"updated_at":now,"checked_at":now,"status":"automatic"}
+              print("Automatic rate",rate,source)
+          with open("rate.json","w",encoding="utf-8") as f:
+              json.dump(data,f,ensure_ascii=False);f.write("\n")
           PY
-      - name: Save diagnostics
+      - name: Commit latest check
         run: |
           git config user.name "price-rate-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add rate-debug.txt
-          git diff --cached --quiet || git commit -m "Diagnose exchange rate source"
+          git add rate.json
+          git diff --cached --quiet || git commit -m "Update exchange rate"
           git push
