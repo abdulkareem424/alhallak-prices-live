@@ -1,0 +1,46 @@
+name: Apply admin price edit
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  update:
+    if: github.actor == 'abdulkareem424' && startsWith(github.event.issue.title, 'تعديل سعر:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and update product
+        env:
+          EDIT_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json,os
+          change=json.loads(os.environ['EDIT_BODY'])
+          product=change['product']
+          if not isinstance(product,list) or len(product)!=4: raise ValueError('invalid product')
+          name,price,currency,unit=product
+          if not isinstance(name,str) or not name.strip(): raise ValueError('invalid name')
+          price=float(price)
+          if price<0 or price>100000000: raise ValueError('invalid price')
+          if currency not in ('USD','SYP'): raise ValueError('invalid currency')
+          if not isinstance(unit,str) or not unit.strip(): raise ValueError('invalid unit')
+          data=json.load(open('products.json'))
+          old_name,old_unit=change['original_name'],change['original_unit']
+          for i,p in enumerate(data):
+              if p[0]==old_name and p[3]==old_unit:
+                  data[i]=[name,price,currency,unit]
+                  break
+          else: raise ValueError('product not found')
+          open('products.json','w').write(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n')
+          PY
+      - name: Publish edit
+        run: |
+          git config user.name "price-admin-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add products.json
+          git commit -m "Update price from admin" && git push
+          gh issue close "${{ github.event.issue.number }}" --comment "تم تحديث السعر ونشره."
+        env:
+          GH_TOKEN: ${{ github.token }}
