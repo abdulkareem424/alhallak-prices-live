@@ -25,11 +25,22 @@ function applyRate(data){
   render();
 }
 
+function saveCache(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(error){}}
+function readCache(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch(error){return null}}
+function restoreCache(){
+  const savedRate=readCache("alhallak_rate");
+  const savedProducts=readCache("alhallak_products");
+  if(savedProducts&&Array.isArray(savedProducts.data)){products=savedProducts.data}
+  if(savedRate&&savedRate.data){applyRate(savedRate.data)}else{render()}
+}
+
 async function refreshRate(){
   try{
     const response=await fetch("rate.json?t="+Date.now(),{cache:"no-store"});
     if(!response.ok)throw new Error("rate request failed");
-    applyRate(await response.json());
+    const data=await response.json();
+    applyRate(data);
+    saveCache("alhallak_rate",{data,stored_at:Date.now()});
   }catch(error){
     document.querySelector("#lastUpdate").textContent="تعذر التحقق الآن • آخر سعر محفوظ";
   }
@@ -40,12 +51,12 @@ async function refreshProducts(){
     const response=await fetch("products.json?t="+Date.now(),{cache:"no-store"});
     if(!response.ok)throw new Error("products request failed");
     const data=await response.json();
-    if(Array.isArray(data)){products=data;render();}
+    if(Array.isArray(data)){products=data;render();saveCache("alhallak_products",{data,stored_at:Date.now()});}
   }catch(error){}
 }
 
 document.querySelector("#q").addEventListener("input",render);
-render();
+restoreCache();
 refreshRate();
 refreshProducts();
 setInterval(refreshRate,30*60*1000);
