@@ -1,1 +1,1 @@
-{"rate": 14150, "source": "syria.tv Damascus sell fallback", "updated_at": "2026-10-23T21:33:04.462788+00:00", "checked_at": "2026-10-23T21:33:04.462788+00:00", "status": "automatic"}
+{"rate": 14150, "source": "syria.tv Damascus sell fallback", "updated_at": "2026-10-23T21:33:04.462788+00:00", "checked_at": "2026-10-24T00:09:56.492080+00:00", "status": "manual fallback", "last_error": "sp-today Damascus highest sell: rate not found | syria.tv Damascus sell fallback: HTTP Error 403: Forbidden"}
